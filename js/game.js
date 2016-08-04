@@ -151,7 +151,6 @@ var SimpleEmissor = function(game, x, y, max_particles, sprite_name)
 	{
 		var new_particle = new SimpleParticle(this.game, this.x, this.y, [-4,0], sprite_name);
 		new_particle.sprite.alpha = Math.random();
-		new_particle.sprite.tint = CROW_COLOR;
 		this.particles.push( new_particle );
 	}
 };
@@ -163,8 +162,8 @@ SimpleEmissor.prototype.update = function()
 		if (this.particles[i].sprite.alpha <= 0.0)
 		{
 			this.particles[i].sprite.alpha = this.max_alpha;
-			this.particles[i].sprite.x = this.x + (Math.random()*10);
-			this.particles[i].sprite.y = this.y + (Math.random()*10);
+			this.particles[i].sprite.x = this.x + 1;
+			this.particles[i].sprite.y = this.y + 1;
 
 			if(this.rotate) {
 				this.particles[i].sprite.rotation += randint(10,12);
@@ -260,9 +259,9 @@ phase01.prototype = {
 	{
 		this.game.stage.backgroundColor = 0x00264d;
 
-		this.music = this.game.add.audio('bg-music');
+		this.music = this.game.add.audio('crickets');
 		this.music.loop = true;
-		// this.music.play();
+		this.music.play();
 
 		this.stars = [];
 		var i = 100;
@@ -278,8 +277,17 @@ phase01.prototype = {
 		
 		// a flag that will be true when you click in 'play' button
 		this.main_menu = new MainMenu(this);
+
+		// SimpleEmissor = function(game, x, y, max_particles, sprite_name)
+		this.emissor = new SimpleEmissor(this.game, 20, 20, 50, 'white')
+		var emi = this.emissor;
 		
 		this.create_footer();
+
+		setInterval(function() {
+			emi.x = -1;
+			emi.y = lerp(0, 480, Math.random());
+		}, 20000);
 	},
 	create_footer: function()
 	{
@@ -301,7 +309,8 @@ phase01.prototype = {
 	update: function()
 	{
 		if (this.main_menu.canplay) {
-			//
+			this.emissor.update();
 		}
+		this.emissor.x += 5;
 	}
 };
